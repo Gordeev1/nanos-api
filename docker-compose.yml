@@ -1,0 +1,32 @@
+version: '3'
+services:
+    api:
+        env_file: .env
+        volumes:
+            - ./static:/app/static
+        build:
+            context: .
+            dockerfile: dockerfile
+        ports:
+            - ${SERVER_PORT}:${SERVER_PORT}
+        networks:
+            - app-network
+        depends_on:
+            - db
+        links:
+            - db
+    db:
+        image: mongo:latest
+        env_file: .env
+        volumes:
+            - dbdata:/data/db
+        ports:
+            - ${DATABASE_PORT}:${DATABASE_PORT}
+        networks:
+            - app-network
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
